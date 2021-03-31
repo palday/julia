@@ -654,8 +654,10 @@ end
 @testset "inplace extraction of first n elements of offset vector" begin
         v0 = rand(6)
         src = OffsetArray(v0, (-3,))
-        dest = Vector(undef, 1)
-        @test first!(dest, src) == [first(src)]
+        dest = OffsetArray(Vector(undef, 1), (-5,))
+        @test only(first!(dest, src)) == first(src)
+        dest = OffsetArray(Vector(undef, 3), (-5,))
+        @test first!(dest, src, 3) == OffsetArray(first(src, 3), (-5,))
         dest = Vector(undef, 3)
         @test first!(dest, src, 3) == first(src, 3)
 end
