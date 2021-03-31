@@ -442,30 +442,34 @@ function first!(itr, val)
 end
 
 """
-    first!(destination, collection, )
+    first!(destination, collection, n=1)
 
-Set the first element of a mutable iterable collection.
+Copy the first n element of an iterable collection to `destination`, without resizing `destination`
 
 !!! compat "Julia 1.7"
     This method requires at least Julia 1.7.
 
 # Examples
 ```jldoctest
-julia> first!([1, 2], 0)
-2-element Vector{Int64}:
- 0
- 2
+julia> x = [1., 2., 3., 4., 5.];
 
-julia> first!([1 2; 3 4], 0)
-2×2 Matrix{Int64}:
- 0  2
- 3  4
+julia> y = zeros(3);
+
+julia> first!(y, x)
+3-element Vector{Float64}:
+ 1.0
+ 0.0
+ 0.0
+
+julia> first!(y, x, 3)
+3-element Vector{Float64}:
+ 1.0
+ 2.0
+ 3.0
 ```
 """
-function first!(itr, val)
-    itr[firstindex(itr)] = val
-    itr
-end
+
+first!(dest::AbstractArray, src, n::Integer=1) = copyto!(dest, firstindex(dest), src, firstindex(dest),n)
 
 """
     last(coll)
@@ -513,6 +517,32 @@ last(itr, n::Integer) = reverse!(collect(Iterators.take(Iterators.reverse(itr), 
 function last(v::AbstractVector, n::Integer)
     n < 0 && throw(ArgumentError("Number of elements must be nonnegative"))
     @inbounds v[max(begin, end - n + 1):end]
+end
+
+"""
+    last(destination, collection, )
+
+Set the last element of a mutable iterable collection.
+
+!!! compat "Julia 1.7"
+    This method requires at least Julia 1.7.
+
+# Examples
+```jldoctest
+julia> last!([1, 2], 0)
+2-element Vector{Int64}:
+ 1
+ 0
+
+julia> last!([1 2; 3 4], 0)
+2×2 Matrix{Int64}:
+ 1  2
+ 3  0
+```
+"""
+function last!(itr, val)
+    itr[lastindex(itr)] = val
+    itr
 end
 
 """
