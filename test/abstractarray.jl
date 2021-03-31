@@ -1233,6 +1233,22 @@ end
     @test_throws ArgumentError last(itr, -6)
 end
 
+@testset "inplace extraction of first n elements of $(typeof(itr))" for itr in (collect(1:9),
+                                                                    [1 4 7; 2 5 8; 3 6 9],
+                                                                    ntuple(identity, 9))
+    v = Vector(undef, 1)
+    @test first!(v, itr) == [first(itr)]
+    v = Vector(undef, 3)
+    @test first!(v, itr, 3) == first(itr, 3)
+end
+
+@testset "mutation of first/last element of $(typeof(itr))" for itr in ([1, 2, 3],
+                                                                        [1 4 7; 2 5 8; 3 6 9])
+
+    @test first(first!(itr, 0)) == 0
+    @test last(last!(itr, 0)) == 0
+end
+
 @testset "Base.rest" begin
     a = reshape(1:4, 2, 2)'
     @test Base.rest(a) == a[:]

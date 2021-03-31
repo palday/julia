@@ -651,6 +651,22 @@ end
     @test last(v, 1) == [v[end]]
 end
 
+@testset "inplace extraction of first n elements of offset vector" begin
+        v0 = rand(6)
+        src = OffsetArray(v0, (-3,))
+        dest = Vector(undef, 1)
+        @test first!(dest, src) == [first(src)]
+        dest = Vector(undef, 3)
+        @test first!(dest, src, 3) == first(src, 3)
+end
+
+@testset "mutation of first/last element of offset vector"  begin
+    v0 = rand(6)
+    v = OffsetArray(v0, (-3,))
+    @test first(first!(v, 0)) == 0
+    @test last(last!(v, 0)) == 0
+end
+
 @testset "Resizing OffsetVectors" begin
     local a = OffsetVector(rand(5),-3)
     axes(a,1) == -2:2

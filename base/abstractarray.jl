@@ -468,7 +468,7 @@ julia> first!(y, x, 3)
  3.0
 ```
 """
-first!(dest::AbstractArray, src, n::Integer=1) = copyto!(dest, firstindex(dest), src, firstindex(dest),n)
+first!(dest::AbstractArray, src, n::Integer=1) = copyto!(dest, firstindex(dest), src, firstindex(src),n)
 
 """
     last(coll)
