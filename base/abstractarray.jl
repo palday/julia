@@ -419,6 +419,35 @@ function first(v::AbstractVector, n::Integer)
 end
 
 """
+    first!(coll)
+
+Set the first element of a mutable iterable collection.
+
+# Examples
+```jldoctest
+julia> first!([1, 2], 0)
+2-element Vector{Int64}:
+ 0
+ 2
+
+julia> first!([1 2; 3 4], 0)
+2×2 Matrix{Int64}:
+ 0  2
+ 3  4
+```
+"""
+function first!(itr, val)
+    itr[firstindex(itr)] = val
+    itr
+end
+
+function first!(itr::AbstractArray, val)
+    itr[begin] = val
+    itr
+end
+
+
+"""
     last(coll)
 
 Get the last element of an ordered collection, if it can be computed in O(1) time. This is
